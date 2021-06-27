@@ -52,6 +52,7 @@ function Pageone() {
     const [content, setContent] = React.useState();
     const [buttonclick, setButtonclick] = React.useState(false);
     const [listdetails, setListDetails] = React.useState([]);
+    const [addlist, setAddlist] = React.useState([]);
 
     const openPopup = () => {
         setOpenpopup(true);
