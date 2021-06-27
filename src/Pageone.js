@@ -7,7 +7,7 @@ const useStyles = makeStyles((theme) => ({
         flexGrow: 1,
     },
     paperone: {
-        textAlign:"center",
+        textAlign: "center",
         padding: theme.spacing(2),
         maxHeight: "460px",
         border: '1px solid rgba(0, 0, 0, 190)',
@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme) => ({
     },
     papertwo: {
         padding: theme.spacing(2),
-        textAlign:"center",
+        textAlign: "center",
         marginTop: '-2%',
         maxHeight: "460px",
         border: '1px solid rgba(0, 0, 0, 190)'
@@ -36,11 +36,11 @@ const useStyles = makeStyles((theme) => ({
         color: "white",
         backgroundColor: "#30a69a",
         textTransform: "none",
-        marginTop:"10px"
+        marginTop: "10px"
     },
-    img:{
+    img: {
         height: "70px",
-        width:"60px"
+        width: "60px"
     }
 }));
 
@@ -66,6 +66,7 @@ function Pageone() {
         setHeader(header);
         setContent(content);
         setButtonclick(true);
+        addlist.push({ 'header': header, 'content': content })
     }
 
     useEffect(() => {
@@ -79,77 +80,79 @@ function Pageone() {
 
         fetch("https://api.github.com/users", requestOptions)
             .then(async res => {
-                console.log(res);
                 const data = await res.json();
-                console.log("Register response:", data);
                 setListDetails(data);
-                // listdetails.push(data);
             })
-    },[1000])
+    }, [1000])
 
     const listview = () => {
         console.log("enter into listview")
         return (
-            <Accordion expanded style={{ backgroundColor: "#525659", color: "white" }}>
-                <AccordionSummary>
-                    <Typography>{header}</Typography>
-                </AccordionSummary><Divider />
-                <AccordionDetails>
-                    <Typography>
-                        {content}
-                    </Typography>
-                </AccordionDetails>
-            </Accordion>
+            addlist.map((addlists, i) => (
+                <Accordion expanded style={{ backgroundColor: "#525659", color: "white" }}>
+                    <AccordionSummary>
+                        <Typography>{addlists.header}</Typography>
+                    </AccordionSummary><Divider />
+                    <AccordionDetails>
+                        <Typography>
+                            {addlists.content}
+                        </Typography>
+                    </AccordionDetails>
+                </Accordion>
+            ))
         );
     }
 
-    console.log("header", header);
-    console.log("content", content);
     return (
         <div>
             <Grid container className={classes.control}>
+
+            {/*-------------------------- API Card ----------------------------- */}
+
                 <Grid item xs style={{ padding: "10px" }}>
                     <Badge className={classes.badge}> Group 1 </Badge>
                     <Card className={classes.paperone}>
-                        <div style={{overflowY:'scroll',padding:'20px',height:'380px'}}>
-                        {listdetails.map((list, i) => (
-                            <Accordion expanded style={{ backgroundColor: "#525659", color: "white" }}>
-                                <AccordionSummary>
-                                    <Typography>{list.login}</Typography>
-                                </AccordionSummary><Divider />
-                                <AccordionDetails>
-                                   <img className={classes.img} src={list.avatar_url}/>
-                                </AccordionDetails>
-                            </Accordion>
-                        ))}
+                        <div style={{ overflowY: 'scroll', padding: '20px', height: '380px' }}>
+                            {listdetails.map((list, i) => (
+                                <Accordion expanded style={{ backgroundColor: "#525659", color: "white" }}>
+                                    <AccordionSummary>
+                                        <Typography>{list.login}</Typography>
+                                    </AccordionSummary><Divider />
+                                    <AccordionDetails>
+                                        <img className={classes.img} src={list.avatar_url} />
+                                    </AccordionDetails>
+                                </Accordion>
+                            ))}
                         </div>
                         <Button className={classes.button}>Add</Button>
                     </Card>
                 </Grid>
 
+            {/* ---------------------- Add Details card ------------------------*/}
+
                 <Grid item xs style={{ padding: "10px" }}>
                     <Badge className={classes.badge}> Group 2</Badge>
                     <Card className={classes.papertwo}>
-                    <div style={{overflowY:'scroll',padding:'20px',height:'380px'}}>
-                        <Accordion expanded style={{ backgroundColor: "#525659", color: "white" }}>
-                            <AccordionSummary>
-                                <Typography>Header</Typography>
-                            </AccordionSummary><Divider />
-                            <AccordionDetails>
-                                <Typography>
-                                    Some quick example text to build on the card title and make up the bulk of the card's content.
-                                </Typography>
-                            </AccordionDetails>
-                        </Accordion>
+                        <div style={{ overflowY: 'scroll', padding: '20px', height: '380px' }}>
+                            <Accordion expanded style={{ backgroundColor: "#525659", color: "white" }}>
+                                <AccordionSummary>
+                                    <Typography>Header</Typography>
+                                </AccordionSummary><Divider />
+                                <AccordionDetails>
+                                    <Typography>
+                                        Some quick example text to build on the card title and make up the bulk of the card's content.
+                                    </Typography>
+                                </AccordionDetails>
+                            </Accordion>
 
-                        {buttonclick && listview()}
-                            </div>
-                        <Button className={classes.button} onClick={openPopup}>Add</Button>
+                            {buttonclick && listview()}
+                        </div>
+                        <Button className={classes.button} onClick={openPopup}>click to add details</Button>
                     </Card>
                 </Grid>
             </Grid>
 
-
+        {/* ----------------------------- pop up ------------------------------ */}
             <div>
                 <Dialog open={openpopup} onClose={closePopup} aria-labelledby="form-dialog-title">
                     <DialogTitle id="form-dialog-title">Add details</DialogTitle>
@@ -164,10 +167,12 @@ function Pageone() {
                             fullWidth
                         />
                         <TextField
-                            label="Enter details here"
-                            rowsMin={4}
-                            onChange={e => { setContent(e.target.value) }}
-                            fullWidth
+                           id="content"
+                           multiline
+                           placeholder="enter text"
+                           rows={4}
+                           variant="outlined"
+                           fullWidth
                         />
                     </DialogContent>
                     <DialogActions>
@@ -180,7 +185,6 @@ function Pageone() {
         </div>
     )
 }
-
 
 
 export default Pageone;
